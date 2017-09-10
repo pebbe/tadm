@@ -137,7 +137,7 @@ public:
   int checkpoint, max_it;
   int fg, its;
   TAO_SOLVER tao;
-  TAO_APPLICATION tao_appl;
+  // TAO_APPLICATION tao_appl; // TODO
 
   mle(Model *m);
 };

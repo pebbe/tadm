@@ -187,7 +187,7 @@ int maxent_monitor(TAO_SOLVER tao, void *e)
 
 #undef __FUNCT__
 #define __FUNCT__ "tao_likelihood"
-int tao_likelihood(TAO_APPLICATION tao_appl, Vec x, double *f, Vec g, void *ctx)
+int tao_likelihood(TAO_SOLVER tao, Vec x, double *f, Vec g, void *ctx)
 {
   likelihood(x, f, g, (mle *)ctx);
 
@@ -243,7 +243,7 @@ int estimate_params(mle *e)
   CHKERRQ(ierr);
   ierr = TaoApplicationCreate(PETSC_COMM_WORLD, &e->tao_appl);
   CHKERRQ(ierr);
-  ierr = TaoAppSetObjectiveAndGradientRoutine(e->tao_appl, tao_likelihood, e);
+  ierr = TaoSetObjectiveAndGradientRoutine(e->tao, tao_likelihood, e);
   CHKERRQ(ierr);
 
   // check for bounds on parameters
@@ -290,7 +290,7 @@ int estimate_params(mle *e)
         ierr = VecCreateSeq(PETSC_COMM_WORLD, 2 * n, &e->penalty);
       CHKERRQ(ierr);
 
-      ierr = TaoAppSetInitialSolutionVec(e->tao_appl, e->params2);
+      ierr = TaoSetInitialVector(e->tao, e->params2);
       CHKERRQ(ierr);
 
       Vec upper, lower;
@@ -300,7 +300,7 @@ int estimate_params(mle *e)
       CHKERRQ(ierr);
       VecSet(lower, 0.0);
       VecSet(upper, TAO_INFINITY);
-      TaoAppSetVariableBounds(e->tao_appl, lower, upper);
+      TaoSetVariableBounds(e->tao, lower, upper);
       //    ierr = VecDestroy(lower); CHKERRQ(ierr);
       //    ierr = VecDestroy(upper); CHKERRQ(ierr);
     }
@@ -312,7 +312,7 @@ int estimate_params(mle *e)
       ierr = VecDuplicate(e->m->params, &e->penalty);
     CHKERRQ(ierr);
 
-    ierr = TaoAppSetInitialSolutionVec(e->tao_appl, e->m->params);
+    ierr = TaoSetInitialVector(e->tao, e->m->params);
     CHKERRQ(ierr);
   }
 
@@ -343,7 +343,7 @@ int estimate_params(mle *e)
         VecSet(upper, ubound);
       else
         VecSet(upper, TAO_INFINITY);
-      TaoAppSetVariableBounds(e->tao_appl, lower, upper);
+        TaoSetVariableBounds(e->tao, lower, upper);
     }
   }
 
@@ -357,7 +357,7 @@ int estimate_params(mle *e)
   }
   else
   {
-    TaoSetMaximumIterates(e->tao, e->max_it);
+    TaoSetMaximumIterations(e->tao, e->max_it);
     TaoSetTolerances(e->tao, e->fatol, e->frtol, 0.0, 0.0);
   }
 
@@ -372,8 +372,10 @@ int estimate_params(mle *e)
   // do it
 
   // ierr = TaoLMVMSetSize(e->tao,2); CHKERRQ(ierr);
+  /* TODO
   ierr = TaoSetApplication(e->tao, e->tao_appl);
   CHKERRQ(ierr);
+  */
   ierr = TaoSetFromOptions(e->tao);
   CHKERRQ(ierr);
   ierr = TaoSolve(e->tao);
