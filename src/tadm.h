@@ -21,10 +21,12 @@
 
 // Copyright (c) 2001-2002 Robert Malouf
 
-#include "petsc.h"
-#include "petscvec.h"
-#include "petscmat.h"
-#include "tao.h"
+#include <petsc.h>
+#include <petscvec.h>
+#include <petscmat.h>
+#include <petsctao.h>
+
+#include "fix.h"
 
 #undef SVD // use SVD-based regularization
 

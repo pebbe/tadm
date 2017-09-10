@@ -92,8 +92,8 @@ int main(int argc, char **argv)
     PetscStrncmp(filename, "perceptron", 3, &ptron);
   }
 
-  ierr = PetscOptionsEnd()
-      CHKERRQ(ierr);
+  ierr = PetscOptionsEnd();
+  CHKERRQ(ierr);
 
   // add steepest ascent method to TAO
 

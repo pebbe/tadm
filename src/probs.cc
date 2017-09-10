@@ -276,6 +276,8 @@ int likelihood(Vec x, double *f, Vec g, mle *e)
   int ierr, fail = 0;
   PetscScalar pen;
 
+  PetscOptionsBegin(PETSC_COMM_WORLD, NULL, "likelihood options", NULL);
+
   // initialize
 
   ierr = PetscLogEventBegin(LIKELIHOOD_EVENT, 0, 0, 0, 0);
@@ -406,6 +408,8 @@ int likelihood(Vec x, double *f, Vec g, mle *e)
   ierr = PetscLogEventEnd(LIKELIHOOD_EVENT, 0, 0, 0, 0);
   CHKERRQ(ierr);
   e->fg++;
+
+  PetscOptionsEnd();
 
   return 0;
 }

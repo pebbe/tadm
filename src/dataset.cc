@@ -80,6 +80,8 @@ int measureFile(Datafile &f, int *nClasses, int *nContexts, int *nFeats,
   double v, vv;
   int ii, jj, k, id, ierr;
 
+  PetscOptionsBegin(PETSC_COMM_WORLD, NULL, "measureFile options", NULL);
+  
   ierr = PetscLogEventBegin(MEASURE_EVENT, 0, 0, 0, 0);
   CHKERRQ(ierr);
 
@@ -94,7 +96,7 @@ int measureFile(Datafile &f, int *nClasses, int *nContexts, int *nFeats,
 
     PetscTruth memd;
     PetscOptionsName("-memd", "MEMD estimation", "Estimate", &memd);
-
+    
     // read file
 
     while (f.getCount(&ii) != EOF)
@@ -138,7 +140,9 @@ int measureFile(Datafile &f, int *nClasses, int *nContexts, int *nFeats,
 
   ierr = PetscLogEventEnd(MEASURE_EVENT, 0, 0, 0, 0);
   CHKERRQ(ierr);
-
+  
+  PetscOptionsEnd();
+  
   return 0;
 }
 
@@ -151,6 +155,8 @@ int Dataset::readEvents(char *filename)
   int id, nProcs, ierr;
   double freq, prior, vv;
   PetscTruth valid;
+
+  PetscOptionsBegin(PETSC_COMM_WORLD, NULL, "Dataset::readEvents options", NULL);
 
   MPI_Comm_size(PETSC_COMM_WORLD, &nProcs);
   MPI_Comm_rank(PETSC_COMM_WORLD, &id);
@@ -583,6 +589,8 @@ int Dataset::readEvents(char *filename)
 
   reduced = false;
 
+  PetscOptionsEnd();
+
   return 0;
 }
 
@@ -632,6 +640,8 @@ int initializeDataset(Dataset &d, PetscTruth transpose)
   PetscTruth valid;
   char filename[LEN];
   const double minusone = -1.0;
+
+  PetscOptionsBegin(PETSC_COMM_WORLD, NULL, "initialize dataset options", NULL);
 
   // simple smoothing
 
@@ -956,6 +966,8 @@ int initializeDataset(Dataset &d, PetscTruth transpose)
   }
 
   d.initialized = true;
+
+  PetscOptionsEnd();
 
   return 0;
 }
