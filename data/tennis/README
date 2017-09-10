@@ -1,0 +1,8 @@
+This example directory contains data (in C4.5 format) from Figure 3.2,
+page 59, of Tom Mitchell's book Machine Learning. The data is Fig 3.2
+is contained in the file train.data. The file test.data contains the
+novel instance on page 178, plus a bunch of other instances I made up
+that more or less followed the pattern.
+
+This is basically just a very small example to allow one to test that
+the installation of TADM is working.

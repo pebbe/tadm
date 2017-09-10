@@ -1,0 +1,12 @@
+memd estimation
+deal with overflow/underflow exceptions better
+resampling( for sentences and parses)
+prior for gis,iis
+check features for gis,iis
+laird (1978)
+identifiability constraints
+collect data sets
+matlab interface
+easier partition representation
+nltk interface
+handle file errors more gracefully

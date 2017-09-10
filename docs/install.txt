@@ -1,0 +1,147 @@
+Compiling TADM. 
+
+Here, we outline how to compile TADM for your system.  Most of the
+work is making sure you have PETSc working properly on your machine,
+though this has gotten much easier with each new release of
+PETSc. When in doubt, consult the the installation page for PETSc:
+http://www-unix.mcs.anl.gov/petsc/petsc-as/documentation/installation.html.
+
+These instructions assume one is using linux, and will probably work
+best using Ubuntu. (Note: TADM has also been successfully installed on
+MacOSX and on Windows running Cygwin.)
+
+1. Make sure you have a Fortran compiler installed. If you are using
+Debian linux (including those based on it, like Ubuntu), you can
+install g77 easily as follows:
+
+   apt-get install g77
+
+
+2. Install PETSc: 
+
+TADM uses PETSc v2.3.3. Download it from:
+
+   http://www-unix.mcs.anl.gov/petsc/
+
+and unpack it somewhere in your user directory (note: if you want to
+do a system wide install as root or using sudo, look at the section on
+"Installing PETSc in /usr/local or /opt where sudo or root previledges
+are required" in the PETSc instructions (note also that "previledges"
+is spelled that way in the document -- so search for the misspelling
+;)). Then, cd to the directory created after unpacking, (should be
+petsc-2.3.0) and set the PETSC_DIR environment variable to be that
+directory. For bash:
+
+   PETSC_DIR=`pwd`; export PETSC_DIR
+
+For tcsh:
+
+   setenv PETSC_DIR `pwd`
+
+Now configure and make PETSC:
+
+   ./config/configure.py --with-fc=g77 --download-f-blas-lapack=1 --with-default-optimization=O --download-mpich=1 --with-mpi=1 --with-dynamic=0 --with-clanguage=C++ --with-debugging --with-shared --with-fortran
+   
+   export PETSC_ARCH=linux-gnu-cxx-debug
+
+   make all test
+
+If all goes well, you can proceed to install TAO. Otherwise, look at
+the more elaborate instructions given below and look at the tips on
+the PETSc installation page.
+
+
+3. Install TAO:
+
+TADM uses TAO v1.9. Download it from:
+
+   http://www-unix.mcs.anl.gov/tao
+
+and unpack it somewhere, eg /usr/local. Then, cd to the directory
+created after unpacking, (should be tao-1.9) and set the TAO_DIR
+environment variable to be that directory. For bash:
+
+   TAO_DIR=`pwd`; export TAO_DIR
+
+For tcsh:
+
+   setenv TAO_DIR `pwd`
+
+Make sure that your shell also has the PETSC_DIR variable set to where
+PETSc is on your machine. Now make TAO:
+
+   make all
+
+Test your installation with:
+
+   make tao_testexamples
+
+(Use "make tao_testexamples_uni" if you have installed PETSc for one
+processor.)
+
+4. Install ZLIB:
+
+TADM uses zlib v1.2.3. Download it from:
+
+     http://www.zlib.net
+
+and unpack it somewhere, eg /usr/local. Then, cd to the directory
+created after unpacking, (should be zlib-1.2.3) and run "make install".
+
+
+5. Compile TADM:
+
+   cd tadm
+   make
+
+You might see some warnings, but as long as you don't get errors, you
+should be set to use TADM.
+
+6. Add the TADM executables and scripts in TADM_DIR/bin to your
+   path. Go to the directory where you unpacked TADM and do:
+
+   TADM_DIR=`pwd`
+   export PATH=$PATH:$TADM_DIR/bin
+
+
+
+******************************************************************
+
+Test the examples to make sure TADM is working.
+
+1. The tennis example (from the Mitchell textbook):
+
+a. Go to tadm/data/tennis.
+b. Run the following command:
+
+   tadm_classify.sh --train tennis.train --test tennis.test
+
+You should get a readout of TADM iterating and ending with the line:
+
+   Accuracy = 84.6153846154
+
+c. Feel free to try out the naive Bayes and perceptron classifiers as
+well. See the options in python/classify.py.
+
+
+2. The parse selection example (for ranking, rather than classification):
+
+a. go to tadm/data/parse_selection
+b. Run the following command:
+
+   tadm_classify.sh  --algorithm MaxEntRanker --data-format SimpleRanker --train redwoods.ngram.vm6 --test redwoods.ngram.vm32
+
+Final accuracy will be:
+
+   Accuracy = 69.1176470588
+
+If you are curious about what this is doing, see Baldridge and Osborne
+2007, NLE:
+
+http://comp.ling.utexas.edu/jbaldrid/papers/BaldridgeOsborneNLE.pdf
+
+
+NOTE: these examples use the textual format used by the Python front
+end. You can also create pre-indexed event files that are read
+directly by the tadm C++ executable. See the forums on tadm.sf.net for
+pointers.

@@ -1,0 +1,45 @@
+The Toolkit for Advanced Discriminative Modeling (TADM) is a C++
+implementation for estimating the parameters of discriminative models,
+such as maximum entropy models. It uses the PETSc and TAO toolkits to
+provide high performance and scalability. 
+
+TADM is a rebranding and relicensing of a system written by Rob Malouf
+and distributed previously as "estimate".  A paper describing the use
+of the original system for evaluating various algorithms for training
+maximum entropy models is available here:
+
+http://bulba.sdsu.edu/~malouf/papers/conll02.pdf
+
+TADM currently has very little documentation, so it can be rough for
+first time users to work out how to use it. Look in the docs directory
+for a start and try using the python scripts, which handle a lot of
+low-level details and accept some well-known formats for stating
+features.
+
+See docs/install.txt for instructions on compiling and installing TADM
+on your machine.
+
+See the data directory for two example data sets formatted to work
+with the Python front end and instructions for testing them.
+
+If you need help, please post a message to the TADM sourceforge help forum:
+
+http://sourceforge.net/forum/forum.php?forum_id=473054
+
+Asking questions on the forum is much preferable to contacting the
+developers directly so that everyone can benefit from the answers
+which are provided.
+
+A lot of useful information regarding maximum entropy modeling and
+software is available on Zhang Le's maxent page:
+
+http://homepages.inf.ed.ac.uk/s0450736/maxent.html
+
+Finally, Jason Baldridge has used TADM in his Computational
+Linguistics II class at the University of Texas at Austin. Homework 3
+from the Fall 2006 version of the class is likely to be quite useful
+for people who would like something like a tutorial for using
+TADM. You can download it from the following location:
+
+http://comp.ling.utexas.edu/jbaldrid/courses/2006/cl2/cl2-hw3.tgz
+

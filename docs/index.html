@@ -1,0 +1,230 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+
+<HTML>
+
+<HEAD>
+
+<meta http-equiv=Content-Language content=EN>
+<meta http-equiv=Content-Type content="text/html; charset=iso-8859-1">
+<meta name=language content=EN>
+<meta name=keywords content="machine learning, maximum entropy, maxent, discriminative models, NLP, computational linguistics">
+
+<Link rel="stylesheet" href="style.css" type="text/css">
+
+<TITLE>TADM</TITLE>
+
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+<HR WIDTH="100%">
+
+<center>
+<h1>TADM</h1>
+<h2>The Toolkit for Advanced Discriminative Modeling</h2>
+</center>
+
+<HR WIDTH="100%">
+
+
+<div class=text>
+
+<h2>Introduction</h2>
+
+<p>
+The Toolkit for Advanced Discriminative Modeling (TADM) is a C++
+implementation for estimating the parameters of discriminative models,
+such as maximum entropy models. It uses the <a
+href="http://www-unix.mcs.anl.gov/petsc/">PETSc</a> and <a
+href="http://www-unix.mcs.anl.gov/tao/">TAO</a> toolkits to provide
+high performance and scalability. It was written by <a
+href="http://www-rohan.sdsu.edu/~malouf/">Rob Malouf</a> and is now
+being developed as an open source project on <a
+href="http://www.sf.net">Sourceforge</a> in collaboration with <a
+href="http://homepages.inf.ed.ac.uk/jbaldrid">Jason Baldridge</a> and
+<a href="http://www.iccs.inf.ed.ac.uk/~miles/">Miles Osborne</a>. It
+is licensed under the <a
+href="http://www.gnu.org/copyleft/lesser.html">Lesser GNU Public
+License</a>.
+</p>
+
+For downloads, forums, and news, check out the <a href="https://sourceforge.net/projects/tadm/">the
+Sourceforge project page for TADM</a>.
+
+
+<h2>Background</h2>
+
+<p>
+A feature of maximum entropy (ME) modeling that makes it very
+attractive is that it is a general purpose technique which can be
+applied to a wide variety of problems in natural language processing.
+Indeed, recent years have seen ME techniques used for sentence
+boundary detection, part of speech tagging, parse selection and
+ambiguity resolution, and stochastic attribute-value grammars, to name
+just a few applications (see, e.g., Berger, et al. 1996; Ratnaparkhi
+1998; Johnson, et al. 1999; Osborne 2000). However, while parameter
+estimation for ME models is conceptually straightforward, in practice
+ME models for typical natural language tasks are usually large, and
+frequently contain thousands of free parameters. Estimation of such
+large models is not only expensive, but also, due to sparsely
+distributed features, sensitive to round-off errors.
+
+<p>
+See <a href="http://homepages.inf.ed.ac.uk/s0450736/maxent.html">Zhang
+Le's maxent page</a> for more background and information about maximum entropy.
+</p>
+
+<h2>Input format</h2>
+
+<p>
+The format for event files:
+<pre>
+2
+5 2 0 1 1 2
+3 2 0 3 2 1
+3
+10 1 3 1
+6 2 0 2 2 2
+3 1 2 1
+</pre>
+<p>
+The first part of the file is a header, bracketed by lines containing
+<tt>&header</tt> and <tt>/</tt>.  The header is optional and, if
+present, is ignored.  The first line of each block is the number of
+events for that context (2 and 3 for the two contexts here).  Then
+come the events.  Each event line has a frequency, the number of
+feature value pairs, then pairs of feature number and value.  Features
+are numbered starting with zero.  Each feature can appear only once in
+an event, and must have a value greater than zero.  You can have
+events with a zero frequency -- these are used in computing Z(x) for
+each context, but ignored for computing the entropy and KL divergence.
+Any feature with an expected value of zero is ignored (i.e., the
+corresponding parameter is set to 0.0).
+
+<p>
+Event files can be compressed using <a
+href="http://www.gzip.org">gzip</a>. As event files tend to get very
+large, this can save a lot of disk space and improve performance
+dramatically.
+
+<h2>Usage</h2>
+
+<p>
+The <tt>tadm</tt> executable takes all its commands as options on
+the command line.  Some of the most interesting options are:
+
+<dl>
+<dt><tt>-events_in &lt;filename&gt;</tt></dt>
+<dd>file to read the events from (required)</dd>
+
+<dt><tt>-params_out &lt;filename&gt;</tt></dt>
+<dd>file to write parameter values to</dd>
+
+<dt><tt>-method &lt;method&gt;</tt></dt><dd>optimization method to use
+(reasonable choices are <tt>tao_lmvm</tt>, <tt>tao_cg_prp</tt>,
+<tt>iis</tt>, <tt>gis</tt>, <tt>steep</tt>; there are other choices
+but using them isn't a good idea) (default = <tt>tao_lmvm</tt>)<dd>
+
+<dt><tt>-lbound, -ubound</tt></dt><dd>set an lower or upper bound constraint on the 
+parameter values (only works with constrained optimization methods like <tt>tao_bmlvm</tt>)
+</dd>
+
+<dt><tt>-monitor</tt></dt><dd>display progress towards convergence</dd>
+
+<dt><tt>-max_it &lt;n&gt;</tt></dt><dd>stop if still haven't converged after <em>n</em> iterations (default = 9999)</dd>
+
+<dt><tt>-frtol &lt;d&gt;</tt></dt><dd>relative stopping tolerance (if
+frtol=.001 then the final log-likelihood will be accurate to about 3
+places, whatever that means) (default = 1e-7)</dd>
+
+<dt><tt>-fatol &lt;d&gt;</tt></dt><dd>absolute stopping tolerance
+(fatol=.001 means when the log likelihood improves between iterations
+by less than .001) (default = 1e-10)}</dd>
+
+<dt><tt>-checkpoint &lt;n&gt;</tt></dt><dd>write out intermediate
+parameters every <em>n</em> iterations (default = 0)}</dd>
+
+<dt><tt>-converge</tt></dt><dd>use a simplified convergence test (for
+benchmarking)</dd>
+
+<dt><tt>-summary</tt></dt><dd>print performance summary</dd>
+
+<dt><tt>-trmalloc</tt></dt><dd>use error-checking memory allocator
+(without this, the memory statistics reported by <tt>-summary</tt> are
+meaningless)</dd>
+
+<dt><tt>-trmalloc</tt></dt><dd>use error-checking memory allocator
+(without this, the memory statistics reported by <tt>-summary</tt> are
+meaningless)</dd>
+
+
+</dl>
+
+<p>
+There are some recent options which we have not provided documentation
+for as yet.  There are also scores of other options which get passed
+on to PETSc and TAO (the option <tt>-help</tt> will list some of them,
+and more are listed in the documentation for the libraries), but most
+of them are mainly for profiling and tuning the underlying solvers.
+Feel free to tinker with the options (the SNES options look
+particularly interesting and particularly daunting), and let me know
+if any of them improve anything.
+
+<p>
+Most of the options have reasonable defaults (except <tt>-events_in</tt>,
+which you need to give a value for, and <tt>-params_out</tt>, which you
+probably want to give an option for) and can be left out.  One feature
+that's kind of cute is that on startup the program reads default
+settings from <tt>~/.petscrc</tt> (or a different file specified by the
+option <tt>-options_file</tt>).  This file can also have alias
+statements, to allow abbreviations for some of the option
+names.  For example, my <tt>.petscrc</tt> contains:
+<pre>
+-monitor
+alias -in -events_in
+alias -out -params_out
+</pre>
+
+<h2>Parallel processing</h2>
+
+<p>Since <tt>tadm</tt> uses <a
+href="http://www-unix.mcs.anl.gov/mpi/">MPI</a> for interprocess
+communication, it can easily be ported to a wide range of parallel
+architectures, including SMP and Beowulf-type clusters. Documentation
+for how to do this will come in future releases.
+
+<h2>Changes</h2>
+
+<ul>
+<li> version 0.9.5 - First TADM release, basically Rob Malouf's
+original code relicensed under the Lesser GNU Public License.</ul>
+
+<h2>Availability</h2>
+
+Go to the <a
+href="https://sourceforge.net/project/showfiles.php?group_id=141109">TADM
+download page</a> for source code.
+
+<h2>Installing</h2>
+
+Some very rough instructions are provided in our <a
+href="install.txt">current installation guide</a>. We hope to provide
+better documentation in the near future.
+
+
+<h2>Getting help</h2>
+
+Post any questions you have about installing or using TADM to the <a href="http://sourceforge.net/forum/forum.php?forum_id=473054">Sourceforge help forum</a>.
+
+
+<HR WIDTH="100%">
+
+<table width=100% border=0 cellPadding=0 cellSpacing=0>
+<tr>
+  <!--  <td width=18%>&nbsp;</td>-->
+  <td width=60% alight="left" valign="top">10 August 2005</td>
+  <td width=47% align="right" valign="top"><A href="http://sourceforge.net"> <IMG src="http://sourceforge.net/sflogo.php?group_id=74993&amp;type=5" width="150" height="40" border="0" alt="SourceForge.net Logo"></A> </td>
+</tr>
+</table>
+
+  </body>
+</html>

@@ -1,0 +1,19 @@
+Data for testing ranking code.
+
+The files in this directory contain extracted features for doing parse
+selection on the Redwoods treebank. There are four files, each
+corresponding to a different section of the treebank, and each
+containing features for sentences with 10 parses or less. The feature
+set is the "DT-NGRAM" feature set on derivation trees, discussed in
+the following paper:
+
+
+  Jason Baldridge and Miles Osborne. Active Learning and Logarithmic
+  Opinion Pools for HPSG Parse Selection. Natural Language Engineering
+  13(1):1-32, Cambridge, UK.
+  
+  http://comp.ling.utexas.edu/jbaldrid/papers/BaldridgeOsborneNLE.pdf
+
+The vm6 and vm32 sections are from similar domains (travel planning
+and appointment scheduling), and the ecoc and ecpa are both from
+ecommerce domains.

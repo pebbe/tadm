@@ -1,0 +1,62 @@
+#!/usr/bin/perl -w
+
+#################################################################################
+## The Toolkit for Advanced Discriminative Modeling
+## Copyright (C) 2001-2005 Robert Malouf
+## 
+## This library is free software; you can redistribute it and#or
+## modify it under the terms of the GNU Lesser General Public
+## License as published by the Free Software Foundation; either
+## version 2.1 of the License, or (at your option) any later version.
+## 
+## This library is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+## Lesser General Public License for more details.
+## 
+## You should have received a copy of the GNU Lesser General Public
+## License along with this library; if not, write to the Free Software
+## Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+#################################################################################
+
+# split -- divide a gzipped event file into training and evaluation parts
+#
+# $Id: split.prl,v 1.1.1.1 2005/08/10 16:10:39 jasonbaldridge Exp $
+#
+
+
+$infile = $ARGV[0];
+$trainfile = $ARGV[1];
+$testfile = $ARGV[2];
+
+open IN, "gunzip -c $infile |";
+open TRAIN, "| gzip -c >$trainfile";
+open TEST, "| gzip -c >$testfile";
+
+while (<IN>) {
+
+  chomp;
+  my $events = $_;
+
+  next if (m/[^0-9]/);
+
+  if (rand(10) < 9) {
+
+    print TRAIN "$events\n";
+
+    foreach (1..$events) {
+      $line = <IN>;
+      print TRAIN $line;
+    }
+
+  } else {
+
+    print TEST "$events\n";
+
+    foreach (1..$events) {
+      $line = <IN>;
+      print TEST $line;
+    }
+  }
+}
+
