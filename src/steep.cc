@@ -19,7 +19,7 @@
 
 // $Id: steep.cc,v 1.2 2007/09/03 19:16:48 jasonbaldridge Exp $
 
-#include "src/tao_impl.h"
+#include "tadm.h"
 
 typedef struct
 {

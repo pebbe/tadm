@@ -6,7 +6,7 @@
         {
             "taskName": "make",
             "type": "shell",
-            "command": "make",
+            "command": "make -k",
             "problemMatcher": {
                 "owner": "cpp",
                 "fileLocation": [
