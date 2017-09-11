@@ -24,8 +24,8 @@ typedef struct TAO_APPLICATION
 #define TAO_CONVERGED_ATOL TAO_CONVERGED_GATOL
 #define TAO_CONVERGED_RTOL TAO_CONVERGED_GRTOL
 #define TAO_CONVERGED_TRTOL TAO_CONVERGED_STEPTOL
-#define TAO_INFINITY 1.0e20
-#define TAO_NINFINITY -1.0e20
+#define TAO_INFINITY PETSC_INFINITY
+#define TAO_NINFINITY PETSC_NINFINITY
 #define TAO_SOLVER Tao
 #define TaoApplicationCreate(a, b) FIX_noerror() /* TODO */
 #define TaoAppDestroy(a) FIX_noerror()           /* TODO */
@@ -45,10 +45,8 @@ typedef struct TAO_APPLICATION
 #define SETERRQ(n, s)
 #endif // PETSC_USE_ERRORCHECKING
 
-#define VecCreateSeqWithArray(a, b, c, d) VecCreateSeqWithArray(a, b, 8, c, d) /* TODO */
+#define VecCreateSeqWithArray(a, b, c, d) VecCreateSeqWithArray(a, b, 8, c, d) /* TODO: what value? */
 #define VecDestroy(a) VecDestroy(&a)
-
-#undef tao_likelihood
 
 PetscErrorCode FIX_noerror();
 PetscErrorCode MatCreateMPIAIJ(MPI_Comm comm, PetscInt m, PetscInt n, PetscInt M, PetscInt N, PetscInt d_nz, const PetscInt d_nnz[], PetscInt o_nz, const PetscInt o_nnz[], Mat *A);
